@@ -35,7 +35,7 @@ public class BoardLoader : MonoBehaviour
                 if (nodeType != BoardNodeType.Empty)
                 {
                     Character character = SpawnCharacterOnBoard((BoardNodeType)boardNodes[i][j],
-                        new Vector2(i + offset, j + offset));
+                        new Location(i + offset, j + offset));
 
                     loadedCharacters.Add(character);
                 }
@@ -45,12 +45,12 @@ public class BoardLoader : MonoBehaviour
         return loadedCharacters;
     }
 
-    private Character SpawnCharacterOnBoard(BoardNodeType boardNodeType, Vector2 indexes)
+    private Character SpawnCharacterOnBoard(BoardNodeType boardNodeType, Location location)
     {
-        Vector3 position = board.GetPositionAtIndexes(indexes);
+        Vector3 position = board.GetPositionAtBoardLocation(location);
 
         Character character = spawner.SpawnCharacter(boardNodeType, position);
-        character.Init(indexes);
+        character.Init(location);
 
         return character;
     }

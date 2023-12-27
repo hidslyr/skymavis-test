@@ -1,25 +1,45 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class Gameplay : BasicStateGameplay
 {
     [SerializeField] Board board;
+    [SerializeField] CanvasGroup loadingPanel;
+    [SerializeField] float loadingFadeDuration;
+    [SerializeField] float turnInterval;
 
-    private List<Character> characters = new List<Character>();
+    private CooldownTimer turnTimer = new CooldownTimer();
 
     protected override void OnEnterLoading()
     {
-        characters = board.LoadDefaultBoard();
+        board.LoadDefaultBoard();
 
-        foreach(Character character in characters)
+        turnTimer.Init(turnInterval);
+    }
+
+    protected override void PlayingUpdate()
+    {
+        turnTimer.Update(Time.deltaTime);
+
+        if (turnTimer.IsCooleddown())
         {
-            character.SetOnDeadListener(OnCharacterDead);
+            ProcessGameLogic();
+            turnTimer.Cooldown();
         }
     }
 
-    private void OnCharacterDead(Character character)
+    private void ProcessGameLogic()
     {
-        characters.Remove(character);
+        
+    }
+
+    public void OnTapToPlay()
+    {
+        loadingPanel.DOFade(0, loadingFadeDuration).OnComplete(() =>
+        {
+            StartPlayGame();
+        });
     }
 }

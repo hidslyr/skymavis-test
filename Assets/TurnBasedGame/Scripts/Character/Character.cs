@@ -13,15 +13,16 @@ public class Character : MonoBehaviour
     [SerializeField] CharacterHPBar hpBar;
     [SerializeField] protected int HP;
     [SerializeField] protected bool canMove;
+    [SerializeField] protected BoardNodeType boardNodeType;
 
     protected Action<Character> onDead;
     protected int currentHP;
-    protected Vector2 currentIndexes;
+    protected Location currentIndexes;
     protected int damageFactor;
 
     private float moveAnimateDuration = 0.3f;
 
-    public void Init(Vector2 startingIndexes)
+    public void Init(Location startingIndexes)
     {
         currentHP = HP;
         currentIndexes = startingIndexes;
@@ -29,6 +30,11 @@ public class Character : MonoBehaviour
         onDead = null;
 
         UpdateHealthBar();
+    }
+
+    public Location GetCurrentLocation()
+    {
+        return currentIndexes;
     }
 
     public void SetOnDeadListener(Action<Character> listener)
@@ -41,7 +47,7 @@ public class Character : MonoBehaviour
         return canMove;
     }
 
-    public void Move(Vector3 position, Vector2 indexes)
+    public void Move(Vector3 position, Location indexes)
     {
         characterRenderer.Jump();
         currentIndexes = indexes;
@@ -58,6 +64,11 @@ public class Character : MonoBehaviour
     public void Attacked(int damageReceive)
     {
         LoweringHP(damageReceive);
+    }
+
+    public BoardNodeType GetBoardNodeType()
+    {
+        return boardNodeType;
     }
 
     protected int CalculateDamageDealt(int targetDamageFactor)
