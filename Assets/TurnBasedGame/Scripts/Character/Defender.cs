@@ -4,8 +4,4 @@ using UnityEngine;
 
 public class Defender : Character
 {
-    public override bool CanMove()
-    {
-        return false;
-    }
 }

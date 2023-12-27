@@ -2,10 +2,107 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Game;
+using DG.Tweening;
+using System;
+using Random = UnityEngine.Random;
+using MarchingBytes;
 
-public abstract class Character : MonoBehaviour
+public class Character : MonoBehaviour
 {
-    [SerializeField] AxieFigure axieFigure;
+    [SerializeField] CharacterRenderer characterRenderer;
+    [SerializeField] CharacterHPBar hpBar;
+    [SerializeField] protected int HP;
+    [SerializeField] protected bool canMove;
 
-    public abstract bool CanMove();
+    protected Action<Character> onDead;
+    protected int currentHP;
+    protected Vector2 currentIndexes;
+    protected int damageFactor;
+
+    private float moveAnimateDuration = 0.3f;
+
+    public void Init(Vector2 startingIndexes)
+    {
+        currentHP = HP;
+        currentIndexes = startingIndexes;
+        damageFactor = Random.Range(0, 3);
+        onDead = null;
+
+        UpdateHealthBar();
+    }
+
+    public void SetOnDeadListener(Action<Character> listener)
+    {
+        onDead += listener;
+    }
+
+    public bool CanMove()
+    {
+        return canMove;
+    }
+
+    public void Move(Vector3 position, Vector2 indexes)
+    {
+        characterRenderer.Jump();
+        currentIndexes = indexes;
+
+        this.transform.DOMove(position, moveAnimateDuration);
+    }
+
+    public void Attack(Character target)
+    {
+        int damageDealt = CalculateDamageDealt(target.damageFactor);
+        target.Attacked(damageDealt);
+    }
+
+    public void Attacked(int damageReceive)
+    {
+        LoweringHP(damageReceive);
+    }
+
+    protected int CalculateDamageDealt(int targetDamageFactor)
+    {
+        int magicNumber = 3 + damageFactor - targetDamageFactor;
+
+        if (magicNumber % 3 == 0)
+        {
+            return 4;
+        }
+
+        if (magicNumber % 3 == 1)
+        {
+            return 5;
+        }
+
+        return 3;
+    }
+
+    protected void LoweringHP(int amount)
+    {
+        currentHP -= amount;
+        currentHP = Mathf.Clamp(currentHP, 0, currentHP);
+
+        UpdateHealthBar();
+
+        if (currentHP == 0)
+        {
+            Death();
+        }
+    }
+
+    protected void Death()
+    {
+        onDead?.Invoke(this);
+
+        DOVirtual.DelayedCall(hpBar.GetAnimateDuration(), () =>
+        {
+            EasyObjectPool.instance.ReturnObjectToPool(gameObject);
+        });
+    }
+
+    protected void UpdateHealthBar()
+    {
+        float percentageToMax = (float)currentHP / HP;
+        hpBar.SetHealthBarTo(percentageToMax);
+    }
 }

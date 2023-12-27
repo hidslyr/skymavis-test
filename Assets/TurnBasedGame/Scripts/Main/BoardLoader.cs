@@ -50,6 +50,7 @@ public class BoardLoader : MonoBehaviour
         Vector3 position = board.GetPositionAtIndexes(indexes);
 
         Character character = spawner.SpawnCharacter(boardNodeType, position);
+        character.Init(indexes);
 
         return character;
     }
