@@ -152,7 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae1e49047b56fe540bffde27bb6dea75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boardSize: 20
+  boardSize: 12
   boardRenderer: {fileID: 771907283}
   boardLoader: {fileID: 1389934556}
 --- !u!4 &17450151
@@ -480,7 +480,7 @@ Transform:
   m_GameObject: {fileID: 771907281}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 10, y: 1, z: 10}
+  m_LocalScale: {x: 6, y: 1, z: 6}
   m_Children:
   - {fileID: 572711811}
   m_Father: {fileID: 1468965603}
@@ -804,7 +804,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   board: {fileID: 17450150}
   spawner: {fileID: 30745916}
-  defaultBoard: {fileID: 4900000, guid: 58b024162f792ed4fa0483b8b92d2a03, type: 3}
+  defaultBoard: {fileID: 4900000, guid: ea0b68442e253d545bf5956febcfd4eb, type: 3}
 --- !u!1 &1468965602
 GameObject:
   m_ObjectHideFlags: 0

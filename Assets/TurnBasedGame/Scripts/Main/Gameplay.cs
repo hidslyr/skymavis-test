@@ -3,43 +3,64 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
-public class Gameplay : BasicStateGameplay
+namespace TurnBaseGame
 {
-    [SerializeField] Board board;
-    [SerializeField] CanvasGroup loadingPanel;
-    [SerializeField] float loadingFadeDuration;
-    [SerializeField] float turnInterval;
-
-    private CooldownTimer turnTimer = new CooldownTimer();
-
-    protected override void OnEnterLoading()
+    public class Gameplay : BasicStateGameplay
     {
-        board.LoadDefaultBoard();
+        [SerializeField] Board board;
+        [SerializeField] CanvasGroup loadingPanel;
+        [SerializeField] float loadingFadeDuration;
+        [SerializeField] float turnInterval;
 
-        turnTimer.Init(turnInterval);
-    }
+        private CooldownTimer turnTimer = new CooldownTimer();
 
-    protected override void PlayingUpdate()
-    {
-        turnTimer.Update(Time.deltaTime);
-
-        if (turnTimer.IsCooleddown())
+        protected override void OnEnterLoading()
         {
-            ProcessGameLogic();
-            turnTimer.Cooldown();
+            board.LoadDefaultBoard();
+
+            turnTimer.Init(turnInterval);
         }
-    }
 
-    private void ProcessGameLogic()
-    {
-        
-    }
-
-    public void OnTapToPlay()
-    {
-        loadingPanel.DOFade(0, loadingFadeDuration).OnComplete(() =>
+        protected override void PlayingUpdate()
         {
-            StartPlayGame();
-        });
+            turnTimer.Update(Time.deltaTime);
+
+            if (turnTimer.IsCooleddown())
+            {
+                ProcessGameLogic();
+                turnTimer.Cooldown();
+            }
+        }
+
+        private void ProcessGameLogic()
+        {
+            board.BothTeamsAttack();
+            board.AttackersMove();
+
+            OnTurnEnd();
+        }
+
+        private void OnTurnEnd()
+        {
+            board.ClearDeadCharacters();
+        }
+
+        public void OnTapToPlay()
+        {
+            loadingPanel.DOFade(0, loadingFadeDuration).OnComplete(() =>
+            {
+                StartPlayGame();
+            });
+        }
+
+        protected override void Update()
+        {
+            base.Update();
+
+            if (Input.GetKeyDown(KeyCode.M))
+            {
+                board.AttackersMove();
+            }
+        }
     }
 }

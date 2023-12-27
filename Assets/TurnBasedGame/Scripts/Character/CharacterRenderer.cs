@@ -14,6 +14,6 @@ public class CharacterRenderer : MonoBehaviour
 
     public void Attack()
     {
-        axieFigure.DoAttackMeleeAnim();
+        axieFigure.DoAttackRangedAnim();
     }
 }

@@ -47,6 +47,11 @@ MonoBehaviour:
   characterRenderer: {fileID: 6550725127934815020}
   hpBar: {fileID: 7301284633159485576}
   HP: 32
+  canMove: 0
+  boardNodeType: 2
+  location:
+    x: 0
+    y: 0
 --- !u!1001 &4295834220592684260
 PrefabInstance:
   m_ObjectHideFlags: 0

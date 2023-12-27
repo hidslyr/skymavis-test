@@ -3,15 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using MarchingBytes;
 
-public class Spawner : MonoBehaviour
+namespace TurnBaseGame
 {
-    [SerializeField] List<string> characterPoolNames;
-
-    public Character SpawnCharacter(BoardNodeType nodeType, Vector3 position)
+    public class Spawner : MonoBehaviour
     {
-        GameObject go = EasyObjectPool.instance.GetObjectFromPool(
-            characterPoolNames[(int)nodeType], position, Quaternion.identity);
+        [SerializeField] List<string> characterPoolNames;
 
-        return go.GetComponent<Character>();
+        public Character SpawnCharacter(BoardNodeType nodeType, Vector3 position)
+        {
+            GameObject go = EasyObjectPool.instance.GetObjectFromPool(
+                characterPoolNames[(int)nodeType], position, Quaternion.identity);
+
+            return go.GetComponent<Character>();
+        }
     }
 }

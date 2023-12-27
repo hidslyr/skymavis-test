@@ -514,4 +514,4 @@ MonoBehaviour:
     m_Mode: 0
     m_NumColorKeys: 4
     m_NumAlphaKeys: 2
-  animateDuration: 0
+  animateDuration: 0.3

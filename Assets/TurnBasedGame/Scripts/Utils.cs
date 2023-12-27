@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Utils
@@ -47,5 +49,45 @@ public class Utils
         }
 
         return ret;
+    }
+
+    public static int[][] TransposeArray(int[][] array)
+    {
+        int size = array.Length;
+        int[][] transposed = new int[size][];
+
+        for (int i = 0; i < size; i++)
+        {
+            transposed[i] = new int[size];
+            for (int j = 0; j < size; j++)
+            {
+                transposed[i][j] = array[j][i];
+            }
+        }
+
+        return transposed;
+    }
+}
+
+public static class Extension
+{
+    public static List<List<int>> Transpose(this List<List<int>> matrix)
+    {
+        List<List<int>> transposed = new List<List<int>>();
+
+        int rowCount = matrix.Count;
+        int colCount = matrix[0].Count;
+
+        for (int i = 0; i < colCount; i++)
+        {
+            List<int> newRow = new List<int>();
+            for (int j = 0; j < rowCount; j++)
+            {
+                newRow.Add(matrix[j][i]);
+            }
+            transposed.Add(newRow);
+        }
+
+        return transposed;
     }
 }

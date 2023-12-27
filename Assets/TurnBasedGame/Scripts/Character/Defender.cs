@@ -2,6 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Defender : Character
+namespace TurnBaseGame
 {
+    public class Defender : Character
+    {
+        public override bool IsOnDifferentTeam(Character other)
+        {
+            return !(other is Defender);
+        }
+    }
 }

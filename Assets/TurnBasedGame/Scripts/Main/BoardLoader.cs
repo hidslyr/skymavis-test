@@ -2,56 +2,62 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BoardLoader : MonoBehaviour
+namespace TurnBaseGame
 {
-    [SerializeField] Board board;
-    [SerializeField] Spawner spawner;
-    [SerializeField] TextAsset defaultBoard;
-
-    public List<Character> LoadAxiesFromText()
+    public class BoardLoader : MonoBehaviour
     {
-        List<Character> loadedCharacters = new List<Character>();
+        [SerializeField] Board board;
+        [SerializeField] Spawner spawner;
+        [SerializeField] TextAsset defaultBoard;
 
-        int[][] boardNodes = Utils.GetSquareArrayFromText(defaultBoard.text);
-
-        if (boardNodes.Length > board.GetSize())
+        public List<Character> LoadAxiesFromText()
         {
-            Debug.LogError("Board size is smaller than loaded formation, " +
-                "please make board bigger");
+            List<Character> loadedCharacters = new List<Character>();
 
-            return null;
-        }
+            int[][] boardNodes = Utils.GetSquareArrayFromText(defaultBoard.text);
 
-        // To make sure the loaded formation always in center of the board
-        // no matter the board size is
-        int offset = (board.GetSize() - boardNodes.Length) / 2;
-
-        for (int i = 0; i < boardNodes.Length; i++)
-        {
-            for (int j = 0; j < boardNodes[i].Length; j++)
+            if (boardNodes.Length > board.GetSize())
             {
-                BoardNodeType nodeType = (BoardNodeType)boardNodes[i][j];
+                Debug.LogError("Board size is smaller than loaded formation, " +
+                    "please make board bigger");
 
-                if (nodeType != BoardNodeType.Empty)
+                return null;
+            }
+
+            // To make sure the loaded formation always in center of the board
+            // no matter the board size is
+            int offset = (board.GetSize() - boardNodes.Length) / 2;
+
+            boardNodes = Utils.TransposeArray(boardNodes);
+
+            for (int i = 0; i < boardNodes.Length; i++)
+            {
+                for (int j = 0; j < boardNodes[i].Length; j++)
                 {
-                    Character character = SpawnCharacterOnBoard((BoardNodeType)boardNodes[i][j],
-                        new Location(i + offset, j + offset));
+                    BoardNodeType nodeType = (BoardNodeType)boardNodes[i][j];
 
-                    loadedCharacters.Add(character);
+                    if (nodeType != BoardNodeType.Empty)
+                    {
+                        //Debug.Log("load " + i + " " + j + " " + nodeType.ToString());
+                        Character character = SpawnCharacterOnBoard((BoardNodeType)boardNodes[i][j],
+                            new Location(i + offset, j + offset));
+
+                        loadedCharacters.Add(character);
+                    }
                 }
             }
+
+            return loadedCharacters;
         }
 
-        return loadedCharacters;
-    }
+        private Character SpawnCharacterOnBoard(BoardNodeType boardNodeType, Location location)
+        {
+            Vector3 position = board.GetPositionAtBoardLocation(location);
 
-    private Character SpawnCharacterOnBoard(BoardNodeType boardNodeType, Location location)
-    {
-        Vector3 position = board.GetPositionAtBoardLocation(location);
+            Character character = spawner.SpawnCharacter(boardNodeType, position);
+            character.Init(location);
 
-        Character character = spawner.SpawnCharacter(boardNodeType, position);
-        character.Init(location);
-
-        return character;
+            return character;
+        }
     }
 }

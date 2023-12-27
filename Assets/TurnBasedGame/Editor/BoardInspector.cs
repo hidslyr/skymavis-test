@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using TurnBaseGame;
 
 [CustomEditor(typeof(Board), true)]
 public class BoardInspector : Editor
