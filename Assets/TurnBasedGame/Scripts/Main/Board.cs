@@ -15,20 +15,9 @@ public class Board : MonoBehaviour
     [SerializeField] int boardSize;
 
     [SerializeField] BoardRenderer boardRenderer;
+    [SerializeField] BoardLoader boardLoader;
 
     private float tileSize = 1;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     public int GetSize()
     {
@@ -41,6 +30,11 @@ public class Board : MonoBehaviour
         float zPos = (indexes.y - (float)boardSize / 2) * tileSize - tileSize / 2;
 
         return new Vector3(xPos, 0, zPos);
+    }
+
+    public List<Character> LoadDefaultBoard()
+    {
+        return boardLoader.LoadAxiesFromText();
     }
 
 #if UNITY_EDITOR

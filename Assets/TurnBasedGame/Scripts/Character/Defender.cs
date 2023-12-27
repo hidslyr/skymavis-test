@@ -4,15 +4,8 @@ using UnityEngine;
 
 public class Defender : Character
 {
-    // Start is called before the first frame update
-    void Start()
+    public override bool CanMove()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        return false;
     }
 }

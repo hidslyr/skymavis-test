@@ -3,19 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using Game;
 
-public class Character : MonoBehaviour
+public abstract class Character : MonoBehaviour
 {
     [SerializeField] AxieFigure axieFigure;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public abstract bool CanMove();
 }

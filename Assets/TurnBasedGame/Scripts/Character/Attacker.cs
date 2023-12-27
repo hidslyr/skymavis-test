@@ -15,4 +15,9 @@ public class Attacker : Character
     {
         
     }
+
+    public override bool CanMove()
+    {
+        return true;
+    }
 }
