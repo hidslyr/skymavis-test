@@ -3,17 +3,30 @@ using System.Collections.Generic;
 using UnityEngine;
 using Game;
 
-public class CharacterRenderer : MonoBehaviour
+namespace TurnBaseGame
 {
-    [SerializeField] AxieFigure axieFigure;
-
-    public void Jump()
+    public class CharacterRenderer : MonoBehaviour
     {
-        axieFigure.DoJumpAnim();
-    }
+        [SerializeField] CustomizedAxieFigure axieFigure;
 
-    public void Attack()
-    {
-        axieFigure.DoAttackRangedAnim();
+        public void Jump()
+        {
+            axieFigure.DoJumpAnim();
+        }
+
+        public void Attack()
+        {
+            axieFigure.DoAttackMeleeAnim();
+        }
+
+        public void TurnLeft()
+        {
+            axieFigure.TurnLeft();
+        }
+
+        public void TurnRight()
+        {
+            axieFigure.TurnRight();
+        }
     }
 }

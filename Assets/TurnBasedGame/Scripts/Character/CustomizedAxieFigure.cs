@@ -3,9 +3,9 @@ using Spine;
 using Spine.Unity;
 using UnityEngine;
 
-namespace Game
+namespace TurnBaseGame
 {
-    public class AxieFigure : MonoBehaviour
+    public class CustomizedAxieFigure : MonoBehaviour
     {
         public string id;
         public string genes;

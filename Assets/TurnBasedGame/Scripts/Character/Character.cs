@@ -14,7 +14,6 @@ namespace TurnBaseGame
         [SerializeField] CharacterRenderer characterRenderer;
         [SerializeField] CharacterHPBar hpBar;
         [SerializeField] protected int HP;
-        [SerializeField] protected bool canMove;
         [SerializeField] protected BoardNodeType boardNodeType;
         [SerializeField] public bool debug;
 
@@ -48,21 +47,36 @@ namespace TurnBaseGame
             onDead += listener;
         }
 
-        public bool CanMove()
+        public void Move(Vector3 position, Location targetLocation)
         {
-            return canMove;
-        }
-
-        public void Move(Vector3 position, Location indexes)
-        {
+            if (targetLocation.x > location.x)
+            {
+                characterRenderer.TurnRight();
+            }
+            else
+            {
+                characterRenderer.TurnLeft();
+            }
+            
             characterRenderer.Jump();
-            location = indexes;
+            location = targetLocation;
 
-            this.transform.DOMove(position, moveAnimateDuration);
+            transform.DOMove(position, moveAnimateDuration);
+
+            
         }
 
         public void Attack(Character target)
         {
+            if (target.Location.x > location.x)
+            {
+                characterRenderer.TurnRight();
+            }
+            else
+            {
+                characterRenderer.TurnLeft();
+            }
+
             characterRenderer.Attack();
 
             int damageDealt = CalculateDamageDealt(target.damageFactor);

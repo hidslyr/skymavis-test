@@ -83,6 +83,8 @@ namespace TurnBaseGame
             foreach(Character dead in deadCharacters)
             {
                 characters.Remove(dead);
+
+                boardNodes[dead.Location.x][dead.Location.y] = (int)BoardNodeType.Empty;
             }
 
             deadCharacters.Clear();
@@ -108,33 +110,38 @@ namespace TurnBaseGame
                     continue;
                 }
 
-                IEnumerable<Character> targets = NearestDefenders(attacker);
+                MoveToNeareastPossibleTarget(attacker);
+            }
+        }
 
-                foreach(Character target in targets)
+        private void MoveToNeareastPossibleTarget(Character attacker)
+        {
+            IEnumerable<Character> targets = NearestDefenders(attacker);
+
+            foreach (Character target in targets)
+            {
+                int distanceToDefender = attacker.Distance(target);
+
+                // Already in adjacent slot, wait for attack phase
+                if (distanceToDefender == 1)
                 {
-                    int distanceToDefender = attacker.Distance(target);
-
-                    // Already in adjacent slot, wait for attack phase
-                    if (distanceToDefender == 1)
-                    {
-                        break;
-                    }
-
-                    Pathfinding pf = new Pathfinding(boardNodes);
-                    List<(int, int)> path = pf.FindPath((attacker.Location.x, attacker.Location.y),
-                        (target.Location.x, target.Location.y));
-
-                    // Nearest target may be blocked, try another one
-                    if (path == null || path.Count < 2)
-                    {
-                        continue;
-                    }
-
-                    (int, int) nextMove = path.First();
-
-                    MoveCharacter(attacker, new Location(nextMove.Item1, nextMove.Item2));
                     break;
                 }
+
+                Pathfinding pf = new Pathfinding(boardNodes);
+                List<(int, int)> path = pf.FindPath((attacker.Location.x, attacker.Location.y),
+                    (target.Location.x, target.Location.y));
+
+                // Nearest target may be blocked, try another one
+                if (path == null || path.Count < 2)
+                {
+                    continue;
+                }
+
+                (int, int) nextMove = path.First();
+
+                MoveCharacter(attacker, new Location(nextMove.Item1, nextMove.Item2));
+                break;
             }
         }
 
@@ -206,7 +213,8 @@ namespace TurnBaseGame
 
         private bool IsOutOfBound(Location location)
         {
-            if (location.x >= boardSize || location.y >= boardSize)
+            if (location.x >= boardSize || location.y >= boardSize
+                || location.x < 0 || location.y < 0)
             {
                 return true;
             }

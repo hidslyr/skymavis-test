@@ -804,7 +804,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   board: {fileID: 17450150}
   spawner: {fileID: 30745916}
-  defaultBoard: {fileID: 4900000, guid: ea0b68442e253d545bf5956febcfd4eb, type: 3}
+  defaultBoard: {fileID: 4900000, guid: 58b024162f792ed4fa0483b8b92d2a03, type: 3}
 --- !u!1 &1468965602
 GameObject:
   m_ObjectHideFlags: 0

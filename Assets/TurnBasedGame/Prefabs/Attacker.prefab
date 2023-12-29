@@ -47,8 +47,11 @@ MonoBehaviour:
   characterRenderer: {fileID: 3217134594403666347}
   hpBar: {fileID: 1377548041232837135}
   HP: 16
-  canMove: 1
   boardNodeType: 1
+  debug: 0
+  location:
+    x: 0
+    y: 0
 --- !u!1001 &5607132595003227747
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -60,6 +63,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: CharacterRoot
+      objectReference: {fileID: 0}
+    - target: {fileID: 4681925337231893665, guid: 644c364c52deaeb4b81c64b723d8cdc3,
+        type: 3}
+      propertyPath: id
+      value: 4191804
+      objectReference: {fileID: 0}
+    - target: {fileID: 4681925337231893665, guid: 644c364c52deaeb4b81c64b723d8cdc3,
+        type: 3}
+      propertyPath: genes
+      value: 0x20000000000001000281a000810c0000000100102080830a000100141061020a000100101880c4060001000c0880c50c000100101820c4060001001008804402
       objectReference: {fileID: 0}
     - target: {fileID: 5226612720633307692, guid: 644c364c52deaeb4b81c64b723d8cdc3,
         type: 3}
