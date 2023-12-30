@@ -7,18 +7,29 @@ namespace TurnBaseGame
 {
     public class Gameplay : BasicStateGameplay
     {
+        [Header("References")]
         [SerializeField] Board board;
         [SerializeField] CameraController cameraController;
-        [SerializeField] CanvasGroup loadingPanel;
+        [SerializeField] CanvasGroup loadingUI;
+
+        [Header("Gameplay UI")]
+        [SerializeField] CanvasGroup gameplayUI;
+        [SerializeField] GameObject pauseButton;
+        [SerializeField] GameObject resumeButton;
+        [SerializeField] GameObject pauseOverlay;
+
+        [Space(10)]
+        [Header("Configable properties")]
         [SerializeField] float loadingFadeDuration;
         [SerializeField] float turnInterval;
+        [SerializeField] float speedChangePerClick;
 
         private CooldownTimer turnTimer = new CooldownTimer();
 
         protected override void OnEnterLoading()
         {
+            loadingUI.alpha = 1;
             board.LoadDefaultBoard();
-
             turnTimer.Init(turnInterval);
         }
 
@@ -53,10 +64,33 @@ namespace TurnBaseGame
 
         public void OnTapToPlay()
         {
-            loadingPanel.DOFade(0, loadingFadeDuration).OnComplete(() =>
+            loadingUI.DOFade(0, loadingFadeDuration).OnComplete(() =>
             {
                 StartPlayGame();
+                loadingUI.gameObject.SetActive(false);
+                gameplayUI.DOFade(1, loadingFadeDuration);
             });
+        }
+
+        public void OnPauseButton()
+        {
+            Pause();
+
+            UpdatePauseResumeObjects(true);
+        }
+
+        public void OnResumeButton()
+        {
+            Resume();
+
+            UpdatePauseResumeObjects(false);
+        }
+
+        private void UpdatePauseResumeObjects(bool isPaused)
+        {
+            pauseButton.SetActive(!isPaused);
+            resumeButton.SetActive(isPaused);
+            pauseOverlay.SetActive(isPaused);
         }
 
         protected override void Update()
