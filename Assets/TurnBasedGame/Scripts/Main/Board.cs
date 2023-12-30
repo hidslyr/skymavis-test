@@ -106,6 +106,16 @@ namespace TurnBaseGame
             deadCharacters.Clear();
         }
 
+        // Between Attackers & Defenders
+        // Simple calculate based on total HP
+        public float EstimatedPowerDiff()
+        {
+            int totalAttackersHP = GetAllAttackers().Sum(x => x.GetCurrentHP());
+            int totalDefendersHP = GetAllDefenders().Sum(x => x.GetCurrentHP());
+
+            return (float)totalAttackersHP / (totalAttackersHP + totalDefendersHP);
+        }
+
         private void MoveAttackersTowardNearestDefender(IEnumerable<Character> attackers, bool canRetry = true)
         {
             foreach (Character attacker in attackers)
@@ -266,97 +276,9 @@ namespace TurnBaseGame
             return characters.Where(x => x is Defender);
         }
 
-#if UNITY_EDITOR
         public void RegenerateBoard()
         {
             boardRenderer.RescaleBoard(boardSize);
         }
-
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.LeftArrow))
-            {
-                MoveAllAttackerLeft();
-            }
-
-            if (Input.GetKeyDown(KeyCode.RightArrow))
-            {
-                MoveAllAttackerRight();
-            }
-
-            if (Input.GetKeyDown(KeyCode.UpArrow))
-            {
-                MoveAllAttackerUp();
-            }
-
-            if (Input.GetKeyDown(KeyCode.DownArrow))
-            {
-                MoveAllAttackerDown();
-            }
-        }
-
-        // For testing animation & function
-        private void MoveAllAttackerLeft()
-        {
-            foreach (Character character in GetAllAttackers())
-            {
-                Location nextLocation = character.Location;
-                nextLocation.x -= 1;
-
-                MoveCharacter(character, nextLocation);
-            }
-        }
-
-        private void MoveAllAttackerRight()
-        {
-            foreach (Character character in GetAllAttackers())
-            {
-                Location nextLocation = character.Location;
-                nextLocation.x += 1;
-
-                MoveCharacter(character, nextLocation);
-            }
-        }
-
-        private void MoveAllAttackerUp()
-        {
-            foreach (Character character in GetAllAttackers())
-            {
-                Location nextLocation = character.Location;
-                nextLocation.y -= 1;
-
-                MoveCharacter(character, nextLocation);
-            }
-        }
-
-        private void MoveAllAttackerDown()
-        {
-            foreach (Character character in GetAllAttackers())
-            {
-                Location nextLocation = character.Location;
-                nextLocation.y += 1;
-
-                MoveCharacter(character, nextLocation);
-            }
-        }
-
-        private void LogBoardNodes()
-        {
-            List<List<int>> forVisualization = boardNodes.Transpose();
-            string log = "";
-
-            for (int i = 0; i < boardSize; i++)
-            {
-                for (int j = 0; j < boardSize; j++)
-                {
-                    log += $" {forVisualization[i][j]}";
-                }
-
-                log += "\n";
-            }
-
-            Debug.Log(log);
-        }
-#endif
     }
 }

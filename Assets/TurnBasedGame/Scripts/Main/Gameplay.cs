@@ -26,6 +26,7 @@ namespace TurnBaseGame
         [SerializeField] GameObject resumeButton;
         [SerializeField] GameObject pauseOverlay;
         [SerializeField] Text speedInfoText;
+        [SerializeField] Slider powerBarSlider;
 
         [Space(10)]
         [Header("Configable properties")]
@@ -93,6 +94,7 @@ namespace TurnBaseGame
         private void OnTurnEnd()
         {
             board.ClearDeadCharacters();
+            powerBarSlider.DOValue(board.EstimatedPowerDiff(), 0.3f);
         }
 
         public void OnTapToPlay()

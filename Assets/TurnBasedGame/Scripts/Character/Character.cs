@@ -62,8 +62,6 @@ namespace TurnBaseGame
             location = targetLocation;
 
             transform.DOMove(position, moveAnimateDuration * Gameplay.gameplaySpeed);
-
-            
         }
 
         public void Attack(Character target)
@@ -86,6 +84,11 @@ namespace TurnBaseGame
         public void Attacked(int damageReceive)
         {
             LoweringHP(damageReceive);
+        }
+
+        public int GetCurrentHP()
+        {
+            return currentHP;
         }
 
         public BoardNodeType GetBoardNodeType()
