@@ -20,14 +20,15 @@ Shader "Custom/Texture Splatting Graphic Palette" {
 		[HideInInspector] _ColorMask ("Color Mask", Float) = 15
 
 		[Toggle(UNITY_UI_ALPHACLIP)] _UseUIAlphaClip ("Use Alpha Clip", Float) = 0
+		[Toggle] _ActivateOutline("Activate Outline", Float) = 0
 
 		// Outline properties are drawn via custom editor.
+		_OutlineColor("Outline Color", Color) = (1,1,0,1)
 		[HideInInspector] _OutlineWidth("Outline Width", Range(0,8)) = 3.0
-		[HideInInspector] _OutlineColor("Outline Color", Color) = (1,1,0,1)
 		[HideInInspector] _OutlineReferenceTexWidth("Reference Texture Width", Int) = 1024
 		[HideInInspector] _ThresholdEnd("Outline Threshold", Range(0,1)) = 0.25
 		[HideInInspector] _OutlineSmoothness("Outline Smoothness", Range(0,1)) = 1.0
-		[HideInInspector][MaterialToggle(_USE8NEIGHBOURHOOD_ON)] _Use8Neighbourhood("Sample 8 Neighbours", Float) = 1
+		[HideInInspector] [MaterialToggle(_USE8NEIGHBOURHOOD_ON)] _Use8Neighbourhood("Sample 8 Neighbours", Float) = 1
 		[HideInInspector] _OutlineMipLevel("Outline Mip Level", Range(0,3)) = 0
 	}
 
@@ -71,6 +72,10 @@ Shader "Custom/Texture Splatting Graphic Palette" {
 			sampler2D _MainTex;
 			float4 _MainTex_ST;
 
+			float4 _OutlineColor;
+			float _OutlineWidth;
+			float _ActivateOutline;
+
 			sampler2D _LineTex, _Splat0Tex, _Splat1Tex, _SwapTex;
 			
 			struct VertexData {
@@ -99,20 +104,13 @@ Shader "Custom/Texture Splatting Graphic Palette" {
 				return i;
 			}
 
-			float4 MyFragmentProgram (Interpolators i) : SV_TARGET {
-				//UNITY_SETUP_INSTANCE_ID(i);
-
-				/*float4 dstColor1 = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _DstColor1);
-				float4 dstColor2 = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _DstColor2);
-				float4 dstColor3 = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _DstColor3);
-				float4 dstColor4 = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _DstColor4);
-				float4 dstColor5 = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _DstColor5);*/
-
-				float4 dstColor1 = tex2D(_SwapTex, float2(i.vertexColor.r,  0.0 / 8.0 + i.vertexColor.g * 256.0 / 8.0));
-				float4 dstColor2 = tex2D(_SwapTex, float2(i.vertexColor.r,  1.0 / 8.0 + i.vertexColor.g * 256.0 / 8.0));
-				float4 dstColor3 = tex2D(_SwapTex, float2(i.vertexColor.r,  2.0 / 8.0));
-				float4 dstColor4 = tex2D(_SwapTex, float2(i.vertexColor.r,  3.0 / 8.0));
-				float4 dstColor5 = tex2D(_SwapTex, float2(i.vertexColor.r,  4.0 / 8.0));
+			float4 GetBaseColor(Interpolators i)
+			{
+				float4 dstColor1 = tex2D(_SwapTex, float2(i.vertexColor.r, 0.0 / 8.0 + i.vertexColor.g * 256.0 / 8.0));
+				float4 dstColor2 = tex2D(_SwapTex, float2(i.vertexColor.r, 1.0 / 8.0 + i.vertexColor.g * 256.0 / 8.0));
+				float4 dstColor3 = tex2D(_SwapTex, float2(i.vertexColor.r, 2.0 / 8.0));
+				float4 dstColor4 = tex2D(_SwapTex, float2(i.vertexColor.r, 3.0 / 8.0));
+				float4 dstColor5 = tex2D(_SwapTex, float2(i.vertexColor.r, 4.0 / 8.0));
 
 				float4 mainColor = tex2D(_MainTex, i.uv);
 				float4 lineColor = tex2D(_LineTex, i.uv);
@@ -133,15 +131,45 @@ Shader "Custom/Texture Splatting Graphic Palette" {
 				color = color * (1 - splat1Color.r) + dstColor4 * splat1Color.r;
 				color = color * (1 - mainColorA) + mainColor.rgb * i.vertexColor.a * mainColorA;
 				color = color * (1 - lineColor.a) + lineColor.rgb * dstColor5 * lineColor.a;
-				
+
 				float4 baseColor = 0;
 				baseColor.rgb = color;
 				baseColor.a = clamp(mainBackColorA + splat0Color.r + splat0Color.g + splat1Color.g + splat1Color.b + splat1Color.r + mainColorA + lineColor.a, 0, 1) * i.vertexColor.a;
-				#ifdef UNITY_UI_ALPHACLIP
-				clip (baseColor.a - 0.001);
-				#endif
+#ifdef UNITY_UI_ALPHACLIP
+				clip(baseColor.a - 0.001);
+#endif
+
 				return baseColor;
+			}
+
+			float4 MyFragmentProgram(Interpolators i) : SV_TARGET{
+				//UNITY_SETUP_INSTANCE_ID(i);
+
+				/*float4 dstColor1 = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _DstColor1);
+				float4 dstColor2 = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _DstColor2);
+				float4 dstColor3 = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _DstColor3);
+				float4 dstColor4 = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _DstColor4);
+				float4 dstColor5 = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _DstColor5);*/
+
+
+				float4 baseColor = GetBaseColor(i);
+
+				if (_ActivateOutline)
+				{
+					// Outline logic
+					float4 outlineCol = _OutlineColor;
+
+					float4 centerPixel = tex2D(_LineTex, i.uv);
+
+					// Draw outline based on Line texture
+					if (centerPixel.a > 0)
+					{
+						baseColor = _OutlineColor; // Set outline color
+					}
+				}
 				
+				
+				return baseColor;
 			}
 
 			ENDCG

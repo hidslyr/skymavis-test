@@ -10,6 +10,8 @@ namespace TurnBaseGame
         public string id;
         public string genes;
         private SkeletonAnimation skeletonAnimation;
+        private MeshRenderer meshRenderer;
+        private MaterialPropertyBlock materialPropertyBlock;
 
         [SerializeField] private bool _flipX = false;
         public bool flipX
@@ -31,7 +33,9 @@ namespace TurnBaseGame
         private void Awake()
         {
             skeletonAnimation = gameObject.GetComponent<SkeletonAnimation>();
-            
+            meshRenderer = gameObject.GetComponent<MeshRenderer>();
+            materialPropertyBlock = new MaterialPropertyBlock();
+
             // Shouldn't be here, but it's useful
             Mixer.Init();
             Mixer.SpawnSkeletonAnimation(skeletonAnimation, id, genes);
@@ -44,6 +48,8 @@ namespace TurnBaseGame
             skeletonAnimation.skeleton.FindSlot("shadow").Attachment = null;
             skeletonAnimation.state.SetAnimation(0, "action/idle/normal", true);
             skeletonAnimation.state.End += SpineEndHandler;
+
+            meshRenderer.GetPropertyBlock(materialPropertyBlock);
         }
 
         private void OnDisable()
@@ -52,6 +58,18 @@ namespace TurnBaseGame
             {
                 skeletonAnimation.state.End -= SpineEndHandler;
             }
+        }
+
+        public void HighLight()
+        {
+            materialPropertyBlock.SetFloat("_ActivateOutline", 1f);
+            meshRenderer.SetPropertyBlock(materialPropertyBlock);
+        }
+
+        public void UnHighLight()
+        {
+            materialPropertyBlock.SetFloat("_ActivateOutline", 0f);
+            meshRenderer.SetPropertyBlock(materialPropertyBlock);
         }
 
         public void TurnLeft()

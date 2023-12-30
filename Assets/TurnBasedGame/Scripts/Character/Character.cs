@@ -116,6 +116,16 @@ namespace TurnBaseGame
             characterRenderer.ResumeAnimation();
         }
 
+        public void HighLight()
+        {
+            characterRenderer.HighLight();
+        }
+
+        public void UnHighLight()
+        {
+            characterRenderer.UnHighLight();
+        }
+
         protected int CalculateDamageDealt(int targetDamageFactor)
         {
             int magicNumber = 3 + damageFactor - targetDamageFactor;

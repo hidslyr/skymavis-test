@@ -38,5 +38,15 @@ namespace TurnBaseGame
         {
             axieFigure.ResumeAnimation();
         }
+
+        public void HighLight()
+        {
+            axieFigure.HighLight();
+        }
+
+        public void UnHighLight()
+        {
+            axieFigure.UnHighLight();
+        }
     }
 }
