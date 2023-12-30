@@ -8,6 +8,7 @@ namespace TurnBaseGame
     public class Gameplay : BasicStateGameplay
     {
         [SerializeField] Board board;
+        [SerializeField] CameraController cameraController;
         [SerializeField] CanvasGroup loadingPanel;
         [SerializeField] float loadingFadeDuration;
         [SerializeField] float turnInterval;
@@ -30,6 +31,11 @@ namespace TurnBaseGame
                 ProcessGameLogic();
                 turnTimer.Cooldown();
             }
+        }
+
+        protected override void OnEnterPlay()
+        {
+            cameraController.EnableCameraControl(true);
         }
 
         private void ProcessGameLogic()
