@@ -3,25 +3,28 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
-public class CharacterHPBar : MonoBehaviour
+namespace TurnBaseGame
 {
-    [SerializeField] SpriteRenderer fillRenderer;
-    [SerializeField] Transform scaleRoot;
-    [SerializeField] Gradient colorGradient;
-
-    [SerializeField] float animateDuration;
-
-    public void SetHealthBarTo(float percentage)
+    public class CharacterHPBar : MonoBehaviour
     {
-        scaleRoot.DOScaleX(percentage, animateDuration);
+        [SerializeField] SpriteRenderer fillRenderer;
+        [SerializeField] Transform scaleRoot;
+        [SerializeField] Gradient colorGradient;
 
-        Color desiredColor = colorGradient.Evaluate(percentage);
+        [SerializeField] float animateDuration;
 
-        fillRenderer.DOColor(desiredColor, animateDuration);
-    }
+        public void SetHealthBarTo(float percentage)
+        {
+            scaleRoot.DOScaleX(percentage, animateDuration * Gameplay.gameplaySpeed);
 
-    public float GetAnimateDuration()
-    {
-        return animateDuration;
+            Color desiredColor = colorGradient.Evaluate(percentage);
+
+            fillRenderer.DOColor(desiredColor, animateDuration * Gameplay.gameplaySpeed);
+        }
+
+        public float GetAnimateDuration()
+        {
+            return animateDuration * Gameplay.gameplaySpeed;
+        }
     }
 }

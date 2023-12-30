@@ -28,5 +28,15 @@ namespace TurnBaseGame
         {
             axieFigure.TurnRight();
         }
+
+        public void PauseAnimation()
+        {
+            axieFigure.PauseAnimation();
+        }
+
+        public void ResumeAnimation()
+        {
+            axieFigure.ResumeAnimation();
+        }
     }
 }

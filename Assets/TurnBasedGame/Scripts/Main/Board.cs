@@ -78,6 +78,22 @@ namespace TurnBaseGame
             }
         }
 
+        public void Pause()
+        {
+            foreach (Character character in characters)
+            {
+                character.PauseAnimation();
+            }
+        }
+
+        public void Resume()
+        {
+            foreach (Character character in characters)
+            {
+                character.ResumeAnimation();
+            }
+        }
+
         public void ClearDeadCharacters()
         {
             foreach(Character dead in deadCharacters)

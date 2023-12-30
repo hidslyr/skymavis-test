@@ -64,35 +64,39 @@ namespace TurnBaseGame
             skeletonAnimation.skeleton.ScaleX = -1;
         }
 
+        public void PauseAnimation()
+        {
+            skeletonAnimation.timeScale = 0;
+        }
+
+        public void ResumeAnimation()
+        {
+            skeletonAnimation.timeScale = Gameplay.gameplaySpeed;
+
+            TrackEntry currentTrack = skeletonAnimation.AnimationState.Tracks.Items[0];
+
+            if (currentTrack.Animation.Name == "action/idle/normal")
+            {
+                skeletonAnimation.timeScale = 0.5f * Gameplay.gameplaySpeed;
+            }
+        }
+
         public void DoJumpAnim()
         {
-            skeletonAnimation.timeScale = 1f;
+            skeletonAnimation.timeScale = Gameplay.gameplaySpeed;
             skeletonAnimation.AnimationState.SetAnimation(0, "action/move-forward", false);
         }
 
         public void DoAttackMeleeAnim()
         {
-            skeletonAnimation.timeScale = 1f;
+            skeletonAnimation.timeScale = Gameplay.gameplaySpeed;
             skeletonAnimation.AnimationState.SetAnimation(0, "attack/melee/normal-attack", false);
-        }
-
-
-        public void DoAttackRangedAnim()
-        {
-            skeletonAnimation.timeScale = 1f;
-            skeletonAnimation.AnimationState.SetAnimation(0, "attack/ranged/tail-roll", false);
         }
 
         public void DoWinAnim()
         {
-            skeletonAnimation.timeScale = 1f;
+            skeletonAnimation.timeScale = Gameplay.gameplaySpeed;
             skeletonAnimation.AnimationState.SetAnimation(0, "activity/victory-pose-back-flip", false);
-        }
-
-        public void DoBuffAnim()
-        {
-            skeletonAnimation.timeScale = 1f;
-            skeletonAnimation.AnimationState.SetAnimation(0, "attack/ranged/tail-roll", false);
         }
 
 
@@ -102,7 +106,7 @@ namespace TurnBaseGame
             if (animation == "action/move-forward")
             {
                 skeletonAnimation.state.SetAnimation(0, "action/idle/normal", true);
-                skeletonAnimation.timeScale = 0.5f;
+                skeletonAnimation.timeScale = 0.5f * Gameplay.gameplaySpeed;
             }
         }
     }

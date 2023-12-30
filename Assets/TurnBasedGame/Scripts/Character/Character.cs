@@ -61,7 +61,7 @@ namespace TurnBaseGame
             characterRenderer.Jump();
             location = targetLocation;
 
-            transform.DOMove(position, moveAnimateDuration);
+            transform.DOMove(position, moveAnimateDuration * Gameplay.gameplaySpeed);
 
             
         }
@@ -101,6 +101,16 @@ namespace TurnBaseGame
         public virtual bool IsOnDifferentTeam(Character other)
         {
             throw new NotImplementedException();
+        }
+
+        public void PauseAnimation()
+        {
+            characterRenderer.PauseAnimation();
+        }
+
+        public void ResumeAnimation()
+        {
+            characterRenderer.ResumeAnimation();
         }
 
         protected int CalculateDamageDealt(int targetDamageFactor)
