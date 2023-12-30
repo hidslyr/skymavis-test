@@ -1,13 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
+using Cinemachine;
 
 namespace TurnBaseGame
 {
     public class CameraController : MonoBehaviour
     {
-        [SerializeField] Camera orthoCamera;
+        [SerializeField] CinemachineVirtualCamera orthoCamera;
+        [SerializeField] Transform orthoCameraPivot;
+        [SerializeField] CinemachineVirtualCamera isometricCamera;
         [SerializeField] InputManager inputManager;
 
         [Range(1f, 10.0f)]
@@ -22,14 +24,13 @@ namespace TurnBaseGame
 
         private bool enableInputProcess = false;
         private float targetOrthoSize;
-        private Vector3 targetOrthoPosition;
+        private Vector3 targetPosition;
 
         void Start()
         {
             inputManager.OnFingerDragMove += DragCamera;
             inputManager.OnMouseScrollWheelMoved += ZoomCamera;
-            targetOrthoSize = orthoCamera.orthographicSize;
-            targetOrthoPosition = orthoCamera.transform.position;
+            targetPosition = orthoCameraPivot.position;
         }
 
         public void EnableCameraControl(bool enabled)
@@ -37,9 +38,15 @@ namespace TurnBaseGame
             enableInputProcess = enabled;
         }
 
+        public void SwitchCamera()
+        {
+            isometricCamera.enabled = !isometricCamera.enabled;
+            orthoCamera.enabled = !orthoCamera.enabled;
+        }
+
         private void DragCamera(int touchIndex, Vector2 touchPos, Vector2 delta)
         {
-            if (!enableInputProcess)
+            if (!enableInputProcess || !orthoCamera.enabled)
             {
                 return;
             }
@@ -49,24 +56,31 @@ namespace TurnBaseGame
                 0, 
                 -delta.y * Time.deltaTime * dragSensitivity);
 
-            targetOrthoPosition += changeInPosition;
+            targetPosition += changeInPosition;
         }
 
-        private void ZoomCamera(float up)
+        private void ZoomCamera(float axis)
         {
-            targetOrthoSize += up * Time.deltaTime * zoomSensitivity;
+            if (!enableInputProcess || !orthoCamera.enabled)
+            {
+                return;
+            }
+
+            // Scroll data returned as 0.1 if scroll up or -0.1 if scroll down
+            float signed = axis * 100f; 
+            targetPosition += Vector3.up * signed * Time.deltaTime * zoomSensitivity;
         }
 
         private void Update()
         {
-            orthoCamera.orthographicSize = 
-                Mathf.Lerp(orthoCamera.orthographicSize, 
-                targetOrthoSize, 
-                Time.deltaTime * zoomRoughness);
+            if (Input.GetKeyDown(KeyCode.Tab))
+            {
+                SwitchCamera();
+            }
 
-            orthoCamera.transform.position = Vector3.Lerp(
+            orthoCameraPivot.position = Vector3.Lerp(
                 orthoCamera.transform.position,
-                targetOrthoPosition,
+                targetPosition,
                 Time.deltaTime * dragRoughness);
         }
     }

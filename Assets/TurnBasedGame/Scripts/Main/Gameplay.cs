@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 namespace TurnBaseGame
 {
@@ -25,16 +26,18 @@ namespace TurnBaseGame
         [SerializeField] GameObject pauseButton;
         [SerializeField] GameObject resumeButton;
         [SerializeField] GameObject pauseOverlay;
+        [SerializeField] GameObject endGameOverlay;
         [SerializeField] Text speedInfoText;
+        [SerializeField] Text winningTeamText;
         [SerializeField] Slider powerBarSlider;
 
         [Space(10)]
         [Header("Configable properties")]
-        [SerializeField] float loadingFadeDuration;
         [SerializeField] float turnInterval;
         [SerializeField] float speedChangePerClick;
         [SerializeField] float minGameplaySpeed;
         [SerializeField] float maxGameplaySpeed;
+        [SerializeField] float uiAnimateDuration;
 
         private CooldownTimer turnTimer = new CooldownTimer();
 
@@ -83,6 +86,12 @@ namespace TurnBaseGame
             board.Resume();
         }
 
+        protected override void OnGameEnd()
+        {
+            endGameOverlay.transform.DOScale(Vector3.one, uiAnimateDuration);
+            winningTeamText.text = board.GetWinningTeamString();
+        }
+
         private void ProcessGameLogic()
         {
             board.BothTeamsAttack();
@@ -94,18 +103,23 @@ namespace TurnBaseGame
         private void OnTurnEnd()
         {
             board.ClearDeadCharacters();
-            powerBarSlider.DOValue(board.EstimatedPowerDiff(), 0.3f);
+            powerBarSlider.DOValue(board.EstimatedPowerDiff(), uiAnimateDuration);
+
+            if (board.IsGameEnd())
+            {
+                EndGame();
+            }
         }
 
         public void OnTapToPlay()
         {
-            loadingUI.DOFade(0, loadingFadeDuration).OnComplete(() =>
+            loadingUI.DOFade(0, uiAnimateDuration).OnComplete(() =>
             {
                 StartPlayGame();
 
                 loadingUI.gameObject.SetActive(false);
                 gameplayUI.gameObject.SetActive(true);
-                gameplayUI.DOFade(1, loadingFadeDuration);
+                gameplayUI.DOFade(1, uiAnimateDuration);
             });
         }
 
@@ -135,21 +149,17 @@ namespace TurnBaseGame
             speedInfoText.text = gameplaySpeed.ToString();
         }
 
+        public void OnRestartButton()
+        {
+            string currentSceneName = SceneManager.GetActiveScene().name;
+            SceneManager.LoadScene(currentSceneName);
+        }
+
         private void UpdatePauseResumeObjects(bool isPaused)
         {
             pauseButton.SetActive(!isPaused);
             resumeButton.SetActive(isPaused);
             pauseOverlay.SetActive(isPaused);
-        }
-
-        protected override void Update()
-        {
-            base.Update();
-
-            if (Input.GetKeyDown(KeyCode.M))
-            {
-                board.AttackersMove();
-            }
         }
     }
 }

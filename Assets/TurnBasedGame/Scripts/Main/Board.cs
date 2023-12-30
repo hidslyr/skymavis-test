@@ -116,6 +116,31 @@ namespace TurnBaseGame
             return (float)totalAttackersHP / (totalAttackersHP + totalDefendersHP);
         }
 
+        public bool IsGameEnd()
+        {
+            if (GetAllAttackers().Count() == 0 || GetAllDefenders().Count() == 0)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public string GetWinningTeamString()
+        {
+            if (GetAllAttackers().Count() == 0 && GetAllDefenders().Count() == 0)
+            {
+                return "TIE";
+            }
+
+            if (GetAllAttackers().Count() != 0)
+            {
+                return "ATTACK TEAM WON";
+            }
+
+            return "DEFENSE TEAM WON";
+        }
+
         private void MoveAttackersTowardNearestDefender(IEnumerable<Character> attackers, bool canRetry = true)
         {
             foreach (Character attacker in attackers)
