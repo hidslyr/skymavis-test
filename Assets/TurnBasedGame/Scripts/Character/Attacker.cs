@@ -10,5 +10,10 @@ namespace TurnBaseGame
         {
             return !(other is Attacker);
         }
+
+        public override string GetTeamName()
+        {
+            return "ATTACK";
+        }
     }
 }

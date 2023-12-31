@@ -101,7 +101,22 @@ namespace TurnBaseGame
             return Location.Distance(Location, target.Location);
         }
 
+        public string GetHPStr()
+        {
+            return string.Format($"{currentHP}/{HP}");
+        }
+
+        public int GetDamageFactor()
+        {
+            return damageFactor;
+        }
+
         public virtual bool IsOnDifferentTeam(Character other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual string GetTeamName()
         {
             throw new NotImplementedException();
         }

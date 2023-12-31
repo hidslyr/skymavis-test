@@ -6,6 +6,8 @@ namespace TurnBaseGame
 {
     public class CharacterSelector : MonoBehaviour
     {
+        [SerializeField] CharacterInfoUIItem infoUIItem;
+
         private Character selectedCharacter;
 
         // Update is called once per frame
@@ -43,8 +45,10 @@ namespace TurnBaseGame
 
                 if (!hitAnyCharacter)
                 {
-                    UnSelectCurrentCharacter();
+                    UnSelectCurrentCharacterIfPossible();
                 }
+
+                UpdateInfoUIItem();
             }
         }
 
@@ -61,21 +65,40 @@ namespace TurnBaseGame
 
             if (selectedCharacter == character)
             {
-                UnSelectCurrentCharacter();
+                UnSelectCurrentCharacterIfPossible();
 
                 return;
             }
 
-            UnSelectCurrentCharacter();
+            UnSelectCurrentCharacterIfPossible();
             character.HighLight();
 
             selectedCharacter = character;
         }
 
-        private void UnSelectCurrentCharacter()
+        private void UnSelectCurrentCharacterIfPossible()
         {
-            selectedCharacter.UnHighLight();
-            selectedCharacter = null;
+            if (selectedCharacter != null)
+            {
+                selectedCharacter.UnHighLight();
+                selectedCharacter = null;
+            }
+        }
+
+        private void UpdateInfoUIItem()
+        {
+            if (selectedCharacter == null)
+            {
+                infoUIItem.HideCharacterInfo();
+            }
+            else
+            {
+                string teamName = selectedCharacter.GetTeamName();
+                string hpText = selectedCharacter.GetHPStr();
+                int dmgFactor = selectedCharacter.GetDamageFactor();
+
+                infoUIItem.ShowCharacterInfo(teamName, hpText, dmgFactor);
+            }
         }
     }
 }
