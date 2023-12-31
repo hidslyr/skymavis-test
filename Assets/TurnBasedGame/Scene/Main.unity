@@ -2660,7 +2660,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36d1163fa822e8b418a0a603ec078d5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Damping: 0
+  m_Damping: 0.3
 --- !u!1 &1709997356
 GameObject:
   m_ObjectHideFlags: 0
@@ -3596,8 +3596,9 @@ MonoBehaviour:
   inputManager: {fileID: 1183060538}
   dragSensitivity: 2
   dragRoughness: 7
-  zoomSensitivity: 1000
+  zoomSensitivity: 5
   zoomRoughness: 7
+  orthoVcamMinY: 250
 --- !u!1 &2111174919
 GameObject:
   m_ObjectHideFlags: 0

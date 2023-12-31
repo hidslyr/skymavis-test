@@ -31,7 +31,6 @@ namespace TurnBaseGame
                         // Access the GameObject that was hit
                         GameObject hitObject = hitInfo.collider.gameObject;
 
-                        Debug.Log("hit " + hitObject.name);
                         if (hitObject.tag == "Character")
                         {
                             Character character = hitObject.GetComponent<Character>();

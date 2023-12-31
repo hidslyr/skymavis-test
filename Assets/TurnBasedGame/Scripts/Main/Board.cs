@@ -167,7 +167,7 @@ namespace TurnBaseGame
 
         private void MoveToNeareastPossibleTarget(Character attacker)
         {
-            IEnumerable<Character> targets = NearestDefenders(attacker);
+            IEnumerable<Character> targets = NearestDefenders(attacker, 4);
 
             foreach (Character target in targets)
             {
@@ -238,9 +238,9 @@ namespace TurnBaseGame
             }
         }
 
-        private IEnumerable<Character> NearestDefenders(Character attacker)
+        private IEnumerable<Character> NearestDefenders(Character attacker, int limitedTo)
         {
-            return GetAllDefenders().OrderBy(x => x.Distance(attacker));
+            return GetAllDefenders().OrderBy(x => x.Distance(attacker)).Take(limitedTo);
         }
 
         private bool IsBlockedByTeammates(Character character)
