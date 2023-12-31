@@ -20,6 +20,7 @@ namespace TurnBaseGame
         protected Action<Character> onDead;
         protected int currentHP;
         [SerializeField] protected Location location;
+        protected Action onInfoChanged;
         public Location Location
         {
             get
@@ -111,6 +112,16 @@ namespace TurnBaseGame
             return damageFactor;
         }
 
+        public void SetInfoChangedListener(Action listener)
+        {
+            onInfoChanged += listener;
+        }
+
+        public void RemoveInfoChangedListener(Action listener)
+        {
+            onInfoChanged -= listener;
+        }
+
         public virtual bool IsOnDifferentTeam(Character other)
         {
             throw new NotImplementedException();
@@ -169,6 +180,8 @@ namespace TurnBaseGame
             {
                 Death();
             }
+
+            onInfoChanged?.Invoke();
         }
 
         protected void Death()

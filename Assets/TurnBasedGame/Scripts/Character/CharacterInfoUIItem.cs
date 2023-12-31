@@ -23,6 +23,13 @@ public class CharacterInfoUIItem : MonoBehaviour
         animator.SetTrigger("show");
     }
 
+    public void OnCharacterInfoChanged(string teamName, string hpStr, int dmgFactor)
+    {
+        teamText.text = string.Format(teamTextFormat, teamName);
+        HPText.text = string.Format(HPTextFormat, hpStr);
+        dmgFactorText.text = string.Format(dmgFactorTextFormat, dmgFactor.ToString());
+    }
+
     public void HideCharacterInfo()
     {
         animator.SetTrigger("hide");

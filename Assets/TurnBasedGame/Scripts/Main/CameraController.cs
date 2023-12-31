@@ -15,7 +15,7 @@ namespace TurnBaseGame
         [Range(1f, 10.0f)]
         [SerializeField] float dragSensitivity;
 
-        [Range(1f, 10f)]
+        [Range(1f, 20f)]
         [SerializeField] float zoomSensitivity;
         [SerializeField] float orthoVcamMinY;
 
@@ -62,7 +62,7 @@ namespace TurnBaseGame
                 return;
             }
 
-            if (axis == 0)
+            if (Mathf.Approximately(axis, 0))
             {
                 return;
             }

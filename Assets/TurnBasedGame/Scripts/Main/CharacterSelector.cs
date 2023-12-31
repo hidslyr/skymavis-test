@@ -53,26 +53,29 @@ namespace TurnBaseGame
 
         private void ProcessCharacterSelection(Character character)
         {
-            if (selectedCharacter == null)
-            {
-                character.HighLight();
-
-                selectedCharacter = character;
-
-                return;
-            }
-
+            // Unselect current one if user clicked on the same character
             if (selectedCharacter == character)
             {
                 UnSelectCurrentCharacterIfPossible();
-
                 return;
             }
 
-            UnSelectCurrentCharacterIfPossible();
-            character.HighLight();
+            // Unselect current selected character if possible
+            if (selectedCharacter != null)
+            {
+                UnSelectCurrentCharacterIfPossible();
+            }
 
+            character.HighLight();
             selectedCharacter = character;
+            character.SetInfoChangedListener(() =>
+            {
+                string teamName = selectedCharacter.GetTeamName();
+                string hpText = selectedCharacter.GetHPStr();
+                int dmgFactor = selectedCharacter.GetDamageFactor();
+
+                infoUIItem.OnCharacterInfoChanged(teamName, hpText, dmgFactor);
+            });
         }
 
         private void UnSelectCurrentCharacterIfPossible()

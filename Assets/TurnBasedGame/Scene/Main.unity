@@ -3594,10 +3594,8 @@ MonoBehaviour:
   orthoCameraPivot: {fileID: 223371949}
   isometricCamera: {fileID: 1551355641}
   inputManager: {fileID: 1183060538}
-  dragSensitivity: 2
-  dragRoughness: 7
-  zoomSensitivity: 5
-  zoomRoughness: 7
+  dragSensitivity: 6
+  zoomSensitivity: 20
   orthoVcamMinY: 250
 --- !u!1 &2111174919
 GameObject:
